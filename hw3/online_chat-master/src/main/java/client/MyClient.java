@@ -16,7 +16,6 @@ public class MyClient extends JFrame {
 
     public MyClient() {
         super("Чат");
-        storyMessage = new StoryMessage();
         serverService = new SocketServerService();
         serverService.openConnection();
         JPanel jPanel = new JPanel();
@@ -69,6 +68,10 @@ public class MyClient extends JFrame {
 
         JLabel authLabel = new JLabel("Offline");
         authButton.addActionListener(actionEvent -> {
+            if(serverService.isConnected()){
+                return;
+            }
+
             String lgn = login.getText();
             String psw = new String(password.getPassword());
             if (lgn != null && psw != null && !lgn.isEmpty() && !psw.isEmpty()) {
@@ -79,6 +82,7 @@ public class MyClient extends JFrame {
 
                     if((!nick.isEmpty())  && (serverService.isConnected())){
                         authLabel.setText("Online, nick "+nick);
+                        storyMessage = new StoryMessage(nick);
                         storyMessage.readMessage(mainChat);
                     }else {
                         authLabel.setText("Offline: " + nick);

@@ -11,16 +11,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.SimpleFormatter;
 
 public class StoryMessage {
-    private static final String NAME_FILE = "StoryMessage.txt";
+    private static final String NAME_FILE = "History_%nick.txt";
+    private String namefile;
     private static final int MAX_MESSAGE = 100;
     private boolean isFileExist;
-    public void voidStoryMessage() {
 
-    }
-
-    public StoryMessage() {
+    public StoryMessage(String nick) {
         isFileExist = true;
-        File file = new File(NAME_FILE);
+        namefile = NAME_FILE.replace("%nick",nick.toUpperCase());
+        File file = new File(namefile);
         if (!file.exists()){
             try {
                 file.createNewFile();
@@ -42,7 +41,7 @@ public class StoryMessage {
         try {
             Date date = new Date();
             SimpleDateFormat simpleFormatter = new SimpleDateFormat("E yyyy.MM.dd hh:mm:ss");
-            bufferedWriter  = new BufferedWriter(new FileWriter(NAME_FILE,true));
+            bufferedWriter  = new BufferedWriter(new FileWriter(namefile,true));
 
             bufferedWriter.append(simpleFormatter.format(date) + "/ "  +  nick + ": " + message);
             bufferedWriter.newLine();
@@ -60,7 +59,7 @@ public class StoryMessage {
         List<String> arrayMessage = new ArrayList<>();
         BufferedReader bufferedReader = null;
         try {
-            FileReader fileReader = new FileReader(NAME_FILE);
+            FileReader fileReader = new FileReader(namefile);
             bufferedReader = new BufferedReader(fileReader);
             while (bufferedReader.ready()){
                 arrayMessage.add(bufferedReader.readLine().toString());
@@ -78,7 +77,7 @@ public class StoryMessage {
                List<String> arrayMessage1 = arrayMessage.subList(arrayMessage.size()-99,arrayMessage.size());
                 for (String mess:arrayMessage1
                 ) {
-                    mainchat.append(mess);
+                    mainchat.append(mess+"\n");
                 }
             }
         } catch (IOException e) {
